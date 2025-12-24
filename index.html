@@ -1,0 +1,469 @@
+<!-- 
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uber Analytics - Advanced Case Study</title>
+    <style>
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        :root {
+            --primary: #60a5fa; --danger: #f87171; --success: #4ade80;
+            --bg: #000; --card: rgba(20, 20, 20, 0.8); --text: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif; background: linear-gradient(-45deg, #000, #0f172a, #000);
+            background-size: 400% 400%; animation: gradientBG 15s ease infinite;
+            color: var(--text); line-height: 1.6; overflow-x: hidden;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        section { padding: 100px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+        /* --- 1. Interactive Roadmap --- */
+        .roadmap { position: relative; padding-left: 40px; margin: 40px 0; }
+        .roadmap::before {
+            content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%;
+            background: rgba(255,255,255,0.1); border-radius: 10px;
+        }
+        .step { position: relative; margin-bottom: 50px; padding: 20px; background: var(--card); 
+                border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+        .step::before {
+            content: ''; position: absolute; left: -46px; top: 20px; width: 16px; height: 16px;
+            background: var(--primary); border-radius: 50%; box-shadow: 0 0 15px var(--primary);
+        }
+        .step h3 { color: var(--primary); margin-bottom: 10px; }
+
+        /* --- 2. Logic Vault (DAX Section) --- */
+        .logic-vault { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .code-box {
+            background: #050505; border: 1px solid #334155; padding: 20px;
+            border-radius: 10px; position: relative; overflow: hidden;
+        }
+        .code-box::before { content: "DAX"; position: absolute; top: 0; right: 0; 
+                           background: #1e293b; padding: 4px 10px; font-size: 0.7rem; color: #94a3b8; }
+        code { color: #4ade80; font-family: 'Courier New', monospace; font-size: 0.9rem; }
+
+        /* --- 3. Optimized Asset Buttons --- */
+        .asset-box { text-align: center; background: rgba(39, 110, 241, 0.05); padding: 50px; border-radius: 30px; }
+        .btn-group { display: flex; justify-content: center; gap: 15px; margin-top: 30px; }
+        .pill-btn {
+            text-decoration: none; padding: 15px 35px; border-radius: 50px; font-weight: bold;
+            display: flex; align-items: center; gap: 10px; transition: 0.4s;
+        }
+        .pbix { background: #f59e0b; color: #000; }
+        .csv { background: #276ef1; color: #fff; }
+        .pill-btn:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+
+        /* General styles */
+        .hidden { opacity: 0; transform: translateY(30px); transition: 0.8s; }
+        .show { opacity: 1; transform: translateY(0); }
+        .dashboard-img { width: 100%; border-radius: 15px; cursor: pointer; border: 1px solid #333; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <section id="hero" class="hidden">
+            <h1 style="text-align: center; margin-bottom: 50px;">Uber Data Strategy & Analytics</h1>
+            <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px; align-items: center;">
+                <div>
+                    <h2>📊 Executive Summary</h2>
+                    <p>Analysis of 100,000+ trips reveals high-density demand in business zones during peak hours. This dashboard bridges the gap between raw data and operational efficiency.</p>
+                </div>
+                <img src="assets/images/dashboard_overview.png" class="dashboard-img" alt="Overview Dashboard">
+            </div>
+        </section>
+
+        <section id="roadmap-sec" class="hidden">
+            <h2>🛣️ Project Journey (Roadmap)</h2>
+            <div class="roadmap">
+                <div class="step">
+                    <h3>Step 1: ASK (The Problem)</h3>
+                    <p>Understanding revenue trends, vehicle allocation, and identifying surge pricing inconsistencies that lead to customer drop-offs.</p>
+                </div>
+                <div class="step">
+                    <h3>Step 2: SEARCH (Data Processing)</h3>
+                    <p>Cleaning Trip Details and Location datasets. Creating active/inactive relationships for accurate Pickup and Drop-off mapping.</p>
+                </div>
+                <div class="step">
+                    <h3>Step 3: KNOW (Insights)</h3>
+                    <p>Visualizing 67% Uber-Pay preference and 65.28% Day trip dominance to optimize driver shifts.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="logic" class="hidden">
+            <h2 style="margin-bottom: 40px;">🧠 Logic Vault (Key Calculations)</h2>
+            <div class="logic-vault">
+                <div class="code-box">
+                    <p style="color: #94a3b8; margin-bottom: 10px;">Total Revenue Calculation</p>
+                    <code>Total Booking Value = SUM(fare_amount + Surge Fee)</code>
+                </div>
+                <div class="code-box">
+                    <p style="color: #94a3b8; margin-bottom: 10px;">Booking Count</p>
+                    <code>Total Bookings = COUNT('Trip Details'[Trip ID])</code>
+                </div>
+                <div class="code-box">
+                    <p style="color: #94a3b8; margin-bottom: 10px;">Efficiency Metric</p>
+                    <code>Avg Miles = AVERAGE('Trip Details'[trip_distance])</code>
+                </div>
+                <div class="code-box">
+                    <p style="color: #94a3b8; margin-bottom: 10px;">Trip Duration</p>
+                    <code>Avg Time = AVERAGEX(TripData, DATEDIFF(Pickup, DropOff, MINUTE))</code>
+                </div>
+            </div>
+        </section>
+
+        <section id="opt" class="hidden">
+            <h2>💡 Optimization Strategies</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="step" style="margin-bottom: 0; border-left: 4px solid var(--success);">
+                    <h3>Dynamic Dispatch</h3>
+                    <p>Heatmaps ke zariye drivers ko high-demand zones mein pehle hi redirect karna.</p>
+                </div>
+                <div class="step" style="margin-bottom: 0; border-left: 4px solid var(--success);">
+                    <h3>Fare Normalization</h3>
+                    <p>Peak hours mein demand balance karne ke liye balanced surge algorithms ka upyog.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="assets" class="asset-box hidden" style="border: none;">
+            <h2>🚀 Project Deliverables</h2>
+            <p>Download the full Power BI report and source data below.</p>
+            <div class="btn-group">
+                <a href="#" class="pill-btn pbix">📊 Download .PBIX File</a>
+                <a href="#" class="pill-btn csv">📍 Location Table</a>
+                <a href="#" class="pill-btn csv">🚗 Trip Details</a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('show'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.hidden').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uber Trip Analysis</title>
+
+    <style>
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        :root {
+            --primary: #60a5fa;
+            --success: #4ade80;
+            --bg: #000;
+            --card: rgba(20, 20, 20, 0.8);
+            --text: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(-45deg, #000, #0f172a, #000);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 100px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* ROADMAP */
+        .roadmap {
+            position: relative;
+            padding-left: 40px;
+            margin: 40px 0;
+        }
+
+        .roadmap::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .step {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--card);
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .step h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        /* LOGIC */
+        .logic-vault {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .code-box {
+            background: #050505;
+            border: 1px solid #334155;
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .code-box::before {
+            content: "DAX";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #1e293b;
+            padding: 4px 10px;
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+
+        code {
+            color: #4ade80;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        /* ASSETS */
+        .asset-box {
+            text-align: center;
+            background: rgba(39, 110, 241, 0.05);
+            padding: 60px 40px;
+            border-radius: 30px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 35px;
+            flex-wrap: wrap;
+        }
+
+        .pill-btn {
+            text-decoration: none;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.4s;
+        }
+
+        .pbix { background: #f59e0b; color: #000; }
+        .csv { background: #276ef1; color: #fff; }
+
+        .pill-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+
+        .hidden {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: 0.8s;
+        }
+
+        .show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+   <!-- HERO (WITH DASHBOARD IMAGE) -->
+<section id="hero" class="hidden">
+    <h1 style="text-align:center; margin-bottom:50px;">
+        Uber Trip Analysis
+    </h1>
+
+    <div style="
+        display: grid;
+        grid-template-columns: 1fr 1.5fr;
+        gap: 40px;
+        align-items: center;
+    ">
+        <!-- LEFT: TEXT -->
+        <div>
+            <h2>📊 Executive Summary</h2>
+            <p>
+                Analysis of over 100,000 trips highlights strong demand concentration
+                in business zones during peak hours. This dashboard translates raw
+                trip-level data into actionable insights that support operational
+                efficiency and informed decision-making.
+            </p>
+        </div>
+
+        <!-- RIGHT: DASHBOARD IMAGE -->
+        <div>
+            <img 
+                src="assets/images/dashboard_overview.png"
+                alt="Uber Trip Analysis Dashboard"
+                style="
+                    width: 100%;
+                    border-radius: 18px;
+                    border: 1px solid #333;
+                "
+            >
+        </div>
+    </div>
+</section>
+
+
+    <!-- ROADMAP -->
+    <section class="hidden">
+        <h2>🛣️ Project Journey (Roadmap)</h2>
+        <div class="roadmap">
+            <div class="step">
+                <h3>Step 1: ASK (The Problem)</h3>
+                <p>
+                    Understanding revenue trends, vehicle allocation inefficiencies,
+                    and surge pricing inconsistencies impacting customer experience.
+                </p>
+            </div>
+
+            <div class="step">
+                <h3>Step 2: SEARCH (Data Processing)</h3>
+                <p>
+                    Cleaning Trip Details and Location datasets and building active
+                    and inactive relationships for accurate pickup and drop-off analysis.
+                </p>
+            </div>
+
+            <div class="step">
+                <h3>Step 3: KNOW (Insights)</h3>
+                <p>
+                    Identifying demand concentration, time-based usage patterns,
+                    and payment preferences to support operational planning.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- LOGIC -->
+    <section class="hidden">
+        <h2>🧠 Logic Vault (Key Calculations)</h2>
+        <div class="logic-vault">
+            <div class="code-box">
+                <p>Total Revenue</p>
+                <code>Total Booking Value = SUM(fare_amount + Surge Fee)</code>
+            </div>
+            <div class="code-box">
+                <p>Total Bookings</p>
+                <code>Total Bookings = COUNT('Trip Details'[Trip ID])</code>
+            </div>
+            <div class="code-box">
+                <p>Average Distance</p>
+                <code>Avg Miles = AVERAGE('Trip Details'[trip_distance])</code>
+            </div>
+            <div class="code-box">
+                <p>Average Trip Duration</p>
+                <code>Avg Time = AVERAGEX(TripData, DATEDIFF(Pickup, DropOff, MINUTE))</code>
+            </div>
+        </div>
+    </section>
+
+    <!-- OPTIMIZATION -->
+    <section class="hidden">
+        <h2>💡 Optimization Strategies</h2>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+            <div class="step" style="border-left:4px solid var(--success);">
+                <h3>Dynamic Dispatch</h3>
+                <p>Using demand heatmaps to reposition drivers in high-demand zones.</p>
+            </div>
+            <div class="step" style="border-left:4px solid var(--success);">
+                <h3>Fare Normalization</h3>
+                <p>Applying balanced surge pricing to optimize revenue.</p>
+            </div>
+            <div class="step" style="border-left:4px solid var(--success);">
+                <h3>Time-Based Demand Optimization</h3>
+                <p>Aligning driver availability with peak demand periods.</p>
+            </div>
+            <div class="step" style="border-left:4px solid var(--success);">
+                <h3>Zone-Level Performance Analysis</h3>
+                <p>Identifying high-demand and low-efficiency locations.</p>
+            </div>
+            <div class="step" style="border-left:4px solid var(--success);">
+                <h3>Payment Preference Optimization</h3>
+                <p>Supporting seamless digital transactions.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- DELIVERABLES -->
+    <section class="asset-box hidden" style="border:none;">
+        <h2>🚀 Project Deliverables</h2>
+        <p>Download the complete Power BI report and supporting datasets below.</p>
+
+        <div class="btn-group">
+            <a href="https://raw.githubusercontent.com/yashjani1997/Uber-Trip-Analysis/c2f654cf4bd30d487fa6d1aa4d767a3768d34687/Uber_Dashboard.pbix"
+               class="pill-btn pbix" download>
+               📊 Download .PBIX File
+            </a>
+
+            <a href="https://raw.githubusercontent.com/yashjani1997/Uber-Trip-Analysis/c2f654cf4bd30d487fa6d1aa4d767a3768d34687/Location%20Table.xlsx"
+               class="pill-btn csv" download>
+               📍 Location Table (.xlsx)
+            </a>
+
+            <a href="https://raw.githubusercontent.com/yashjani1997/Uber-Trip-Analysis/c2f654cf4bd30d487fa6d1aa4d767a3768d34687/Uber%20Trip%20Details.xlsx"
+               class="pill-btn csv" download>
+               🚗 Trip Details (.xlsx)
+            </a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('show');
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.hidden').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
+
+
