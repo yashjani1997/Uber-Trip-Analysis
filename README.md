@@ -1,13 +1,21 @@
-# 🚗 Uber Trip Analysis (Power BI Case Study)
+# 🚗 Uber Trip Analysis – Power BI Case Study
+
+An end-to-end **Uber Trip Analysis** project focused on analyzing large-scale trip data to uncover demand patterns, operational inefficiencies, and revenue-driving factors using **Power BI**.
+
+---
 
 ## 📌 Project Overview
-This project is an end-to-end Uber Trip Analysis focused on analyzing large-scale trip data to uncover demand patterns, operational inefficiencies, and revenue-driving factors using Power BI.
 
-The objective is to transform raw trip-level data into actionable business insights that support data-driven decision-making related to pricing, driver allocation, and customer experience.
+This project transforms raw trip-level data into actionable business insights supporting data-driven decisions related to pricing, driver allocation, and customer experience.
+
+- **Dataset Period:** June 1, 2024 – June 30, 2024
+- **Total Trips Analyzed:** 103,728
+- **Tool:** Power BI (3-page interactive dashboard)
 
 ---
 
 ## 🎯 Business Objectives
+
 - Analyze overall trip volume and revenue trends
 - Identify peak demand hours and high-demand zones
 - Understand customer payment preferences
@@ -16,90 +24,142 @@ The objective is to transform raw trip-level data into actionable business insig
 
 ---
 
-## 🗂️ Dataset Description
-The analysis is based on the following datasets:
+## 📊 Key Metrics (Dashboard KPIs)
 
-- Trip Details – Trip-level information including distance, duration, fare, and surge
-- Location Table – Pickup and drop-off location mapping
-- Dashboard File – Power BI report containing all visuals and measures
+| Metric | Value |
+|---|---|
+| Total Bookings | 103.7K |
+| Total Booking Amount | $1.6M |
+| Avg Booking Value | $15.0 |
+| Total Trip Distance | 349K miles |
+| Avg Trip Distance | 3 miles |
+
+---
+
+## 🔍 Key Insights
+
+### 💳 Payment Preferences
+- **Uber Pay dominates** at 67.03% (70K trips)
+- Cash accounts for 32.23% (33K trips)
+- Amazon Pay & Google Pay minimal (0.17%)
+- Digital payments strongly preferred — opportunity to phase out cash dependency
+
+### 🌙 Day vs Night Trips
+- **Day trips: 65.28%** (68K) vs Night trips: 34.72% (36K)
+- Significant daytime demand — driver allocation should prioritize daytime shifts
+
+### 🚗 Vehicle Type Performance
+| Vehicle | Bookings | Revenue | Distance |
+|---|---|---|---|
+| UberX | 38,744 | $583,880 | 131,496 mi |
+| Uber Comfort | 17,078 | $253,995 | 56,790 mi |
+| Uber Black | 16,710 | $250,192 | 56,149 mi |
+| UberXL | 16,698 | $249,424 | 55,721 mi |
+| Uber Green | 14,498 | $216,181 | 48,778 mi |
+
+- **UberX is the clear leader** — 37% of all bookings
+- All vehicle types maintain consistent avg booking value of $15
+
+### ⏰ Time-Based Demand
+- **Peak hours: 12 PM – 6 PM** (afternoon surge)
+- **Lowest demand: 2 AM – 5 AM**
+- **Busiest day: Sunday (19.2K trips)**
+- **Quietest day: Friday (9.3K trips)**
+- Weekend demand significantly higher than weekdays
+
+### 📍 Location Insights
+- **Most frequent pickup:** Penn Station/Madison Sq West (4.5K)
+- **Most frequent drop-off:** Upper East Side North (4.5K)
+- **Farthest trip:** Lower East Side → Crown Heights North (144 miles)
+- Top 5 locations concentrate around Manhattan hubs
+
+---
+
+## 🗂️ Dataset Description
+
+- **Trip Details** – Trip-level info: distance, duration, fare, surge, vehicle, payment
+- **Location Table** – Pickup and drop-off location mapping
+- **Dashboard File** – Power BI report with all visuals and DAX measures
 
 ---
 
 ## 🧱 Data Preparation & Modeling
+
 - Cleaned and standardized trip-level metrics
 - Handled missing and inconsistent values
-- Created active and inactive relationships for accurate pickup and drop-off analysis
-- Built date and time attributes to enable hourly and daytime insights
-
-This data model ensures accurate aggregations and reliable analysis.
-
----
-
-## 🛠️ Tools & Technologies Used
-- Power BI – Data modeling, DAX measures, dashboard design
-- DAX – Custom KPIs and calculations
-- Excel – Raw data storage and preprocessing
-- GitHub – Version control and project hosting
+- Created active and inactive relationships for accurate pickup/drop-off analysis
+- Built date and time attributes for hourly and daytime insights
 
 ---
 
 ## 🧮 Key DAX Measures
-    Total Booking Value = SUM(fare_amount + Surge Fee)
 
-    Total Bookings = COUNT('Trip Details'[Trip ID])
+```dax
+Total Booking Value = SUM(fare_amount + Surge Fee)
 
-    Avg Miles = AVERAGE('Trip Details'[trip_distance])
+Total Bookings = COUNT('Trip Details'[Trip ID])
 
-    Avg Time =
-    AVERAGEX(
-        TripData,
-        DATEDIFF(Pickup, DropOff, MINUTE)
-    )
+Avg Miles = AVERAGE('Trip Details'[trip_distance])
+
+Avg Time =
+AVERAGEX(
+    TripData,
+    DATEDIFF(Pickup, DropOff, MINUTE)
+)
+```
 
 ---
 
-## 📊 Dashboard Highlights
-The Power BI dashboard provides insights into:
+## 📋 Dashboard Pages
 
-- Total trips and revenue performance
-- Hourly and daytime demand patterns
-- Pickup and drop-off location analysis
-- Payment method distribution
-- Trip distance and duration trends
-
-The dashboard is designed with a clean, business-focused layout for fast insight discovery.
+| Page | Description |
+|---|---|
+| Overview Analysis | KPIs, payment type, vehicle breakdown, location analysis |
+| Time Analysis | Hourly trends, day-wise patterns, hour × day heatmap |
+| Details | Raw trip-level data table |
 
 ---
 
 ## 💡 Optimization Strategies
-Based on the analysis, the following strategies were identified:
 
-- Dynamic Dispatch – Repositioning drivers to high-demand zones using demand heatmaps
-- Fare Normalization – Applying balanced surge pricing during peak hours
-- Time-Based Demand Optimization – Aligning driver availability with peak demand windows
-- Zone-Level Performance Analysis – Identifying high-demand and low-efficiency locations
-- Payment Preference Optimization – Supporting seamless digital payment experiences
+- **Dynamic Dispatch** — Reposition drivers to Penn Station & Upper East Side during peak hours
+- **Fare Normalization** — Apply balanced surge pricing on Sunday afternoons (peak demand)
+- **Time-Based Optimization** — Align driver availability with 12 PM–6 PM peak window
+- **Digital Payment Push** — Incentivize Uber Pay to reduce cash dependency
+- **UberX Focus** — Prioritize UberX fleet expansion given dominant demand
+
+---
+
+## 🛠 Tech Stack
+
+| Tool | Usage |
+|---|---|
+| Power BI | Data modeling, DAX, dashboard design |
+| DAX | Custom KPIs and calculations |
+| Excel | Raw data storage and preprocessing |
+| GitHub | Version control and project hosting |
 
 ---
 
 ## 🚀 Project Deliverables
-- Power BI Dashboard (.pbix)
-- Trip Details Dataset (.xlsx)
-- Location Mapping Dataset (.xlsx)
-- Interactive HTML project page (deployed on Vercel)
 
+- Power BI Dashboard (`.pbix`)
+- Trip Details Dataset (`.xlsx`)
+- Location Mapping Dataset (`.xlsx`)
 
 ---
 
 ## 🔮 Future Enhancements
+
 - Add predictive demand forecasting
-- Integrate real-time trip data
+- Integrate real-time trip data via API
 - Enhance dashboard with drill-through analysis
 - Extend analysis with customer segmentation
 
 ---
 
 ## 👤 Author
-Yash Jani  
+
+**Yash Jani**  
 Data Analyst | Power BI | SQL | Machine Learning  
-GitHub: https://github.com/yashjani1997
+[GitHub: yashjani1997](https://github.com/yashjani1997)
